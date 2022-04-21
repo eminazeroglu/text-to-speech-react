@@ -1,0 +1,13 @@
+@import "./tailwind.css";
+
+*:focus {
+    @apply outline-none
+}
+
+.form-element {
+    @apply border border-gray-300 w-full p-2 rounded
+}
+
+.read-text {
+    @apply font-medium text-indigo-500
+}
