@@ -1,5 +1,5 @@
 import Header from "./components/Header";
-import React, {createRef, useEffect, useRef, useState} from "react";
+import React, {createRef, useCallback, useEffect, useRef, useState} from "react";
 
 function App() {
 
@@ -13,14 +13,15 @@ function App() {
     const handleSpeak = () => {
         let toSpeak = new SpeechSynthesisUtterance(text);
         toSpeak.voice = tts.getVoices().find(i => i.voiceURI === voice);
-        spokenTextRef.current.map(i => {
+        spokenTextRef?.current?.filter(i => {
             i.current.classList.remove('read-text')
+            return false;
         })
         toSpeak.onboundary = onBoundary;
         tts.speak(toSpeak);
     }
 
-    const getVoices = () => {
+    const getVoices = useCallback(() => {
         let interval;
         return new Promise((resolve, reject) => {
             interval = setInterval(() => {
@@ -30,7 +31,7 @@ function App() {
                 }
             }, 10)
         })
-    }
+    }, [tts])
 
     const onBoundary = (event) => {
         const spokenText = event.utterance.text.substr(event.charIndex, event.charLength);
@@ -44,7 +45,7 @@ function App() {
         getVoices().then(r => {
             setVoiceList(r);
         })
-    }, [])
+    }, [getVoices])
 
     return (
         <div className="space-y-5">
